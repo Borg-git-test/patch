@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the Field image tooltips feature.
+ */
+
+include_once 'field_image_tooltips.features.inc';

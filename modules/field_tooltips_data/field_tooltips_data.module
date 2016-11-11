@@ -1,0 +1,219 @@
+<?php
+/**
+ * @file
+ * Drupal Field Tooltips Data module.
+ */
+
+/**
+ * Implements hook_menu().
+ */
+function field_tooltips_data_menu() {
+  $items['tooltip/%node/%ctools_js'] = array(
+    'page callback' => 'field_tooltips_data_view_content',
+    'page arguments' => array(1, 2),
+    'access arguments' => array('access content'),
+    'type' => MENU_CALLBACK,
+  );
+  return $items;
+}
+
+/**
+ * Helper function to output content from mini panels in modal window.
+ *
+ * @param object $node
+ *   Node that will be displayed.
+ * @param bool $ajax
+ *   Use ctools popup.
+ *
+ * @return string
+ *   Node content.
+ */
+function field_tooltips_data_view_content($node, $ajax = FALSE) {
+  $content = node_view($node, 'full');
+  if ($ajax) {
+    ctools_include('modal');
+    ctools_include('ajax');
+    ctools_add_js('ajax-responder');
+
+    $output = array();
+    $output[] = ctools_modal_command_display($node->title, $content);
+
+    print ajax_render($output);
+    drupal_exit();
+  }
+  else {
+    return $content;
+  }
+}
+
+/**
+ * Implements hook_field_info().
+ */
+function field_tooltips_data_field_info() {
+  return array(
+    'field_tooltips_data' => array(
+      'label' => t('Tooltips data'),
+      'description' => t('This field stores tooltips data in the database.'),
+      'settings' => array(),
+      'instance_settings' => array(),
+      'default_widget' => 'field_tooltips_data_widget',
+      'default_formatter' => 'field_tooltips_data_formatter',
+    ),
+
+  );
+}
+
+/**
+ * Implements hook_field_validate().
+ */
+function field_tooltips_data_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
+  switch ($field['type']) {
+    case 'field_tooltips_data':
+      foreach ($items as $delta => $item) {
+        if (!empty($item['value'])) {
+          $value = $item['value'];
+          if (!drupal_validate_utf8($value)) {
+            $errors[$field['field_name']][$langcode][$delta][] = array(
+              'error' => 'text_utf8',
+              'message' => t('%name: the value is not valid UTF-8.',
+                array('%name' => $instance['label'])),
+            );
+          }
+          elseif (!_field_tooltips_data_check_plaintext($value)) {
+            $errors[$field['field_name']][$langcode][$delta][] = array(
+              'error' => 'text_plain',
+              'message' => t('%name: the value is not plain text, appears to contain html markup.',
+                array('%name' => $instance['label'])),
+            );
+          }
+        }
+      }
+      break;
+  }
+}
+
+/**
+ * Checks that arg $str doesn't seem to contain html markup.
+ *
+ * @param string $str
+ *   Tooltips data.
+ *
+ * @return bool
+ *   TRUE if arg $str seem to contain html markup.
+ */
+function _field_tooltips_data_check_plaintext($str) {
+  return (($le = strlen($str)) === strlen(preg_replace('/<[\/a-zA-Z][^<>]*>/', '', rawurldecode($str))))
+  && $le === strlen(strip_tags($str));
+}
+
+/**
+ * Implements hook_field_is_empty().
+ */
+function field_tooltips_data_field_is_empty($item, $field) {
+  if (!isset($item) || !strlen($item)) {
+    return TRUE;
+  }
+  return FALSE;
+}
+
+/**
+ * Implements hook_field_presave().
+ */
+function field_tooltips_data_field_presave($entity_type, $entity, $field, $instance, $langcode, &$items) {
+  if ($field['type'] == 'field_tooltips_data') {
+    foreach ($items as $delta => $item) {
+      if (isset($item)) {
+        $items[$delta] = array(
+          'value' => $item,
+        );
+      }
+    }
+  }
+}
+
+/**
+ * Implements hook_field_widget_info().
+ */
+function field_tooltips_data_field_widget_info() {
+  return array(
+    'field_tooltips_data_widget' => array(
+      'label' => t('Tooltips'),
+      'field types' => array('field_tooltips_data'),
+      'behaviors' => array(
+        'multiple values' => FIELD_BEHAVIOR_CUSTOM,
+        'default value' => FIELD_BEHAVIOR_NONE,
+      ),
+    ),
+  );
+}
+
+/**
+ * Implements hook_field_widget_form().
+ */
+function field_tooltips_data_field_widget_form(&$form, &$form_state, $field, $instance, $langcode, $items, $delta, $element) {
+  drupal_add_js(array(
+    'imageTooltip' => array(
+      'icon' => '/' . drupal_get_path('module', 'field_tooltips_data') . '/images/druplicon-small.png',
+    ),
+  ), 'setting');
+  drupal_add_library('system', 'ui.draggable');
+  $element['value'] = array(
+    '#type' => 'hidden',
+    '#default_value' => isset($items[$delta]['value']) ? $items[$delta]['value'] : '',
+    '#attached' => array(
+      'css' => array(
+        drupal_get_path('module', 'field_tooltips_data') . '/css/tooltips.css',
+      ),
+      'js' => array(
+        drupal_get_path('module', 'field_tooltips_data') . '/js/tooltips-form.js',
+        drupal_get_path('module', 'field_tooltips_data') . '/js/templates.js',
+      ),
+    ),
+  );
+  return $element;
+}
+
+/**
+ * Implements hook_field_formatter_info().
+ */
+function field_tooltips_data_field_formatter_info() {
+  $formatters = array(
+    'field_image_tooltip_formatter' => array(
+      'label' => t('Tooltips'),
+      'field types' => array('field_tooltips_data'),
+    ),
+  );
+
+  return $formatters;
+}
+
+/**
+ * Implements hook_field_formatter_view().
+ */
+function field_tooltips_data_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
+  ctools_include('ajax');
+  ctools_include('modal');
+  ctools_modal_add_js();
+  drupal_add_js(array(
+    'imageTooltip' => array(
+      'icon' => '/' . drupal_get_path('module', 'field_tooltips_data') . '/images/druplicon-small.png',
+    ),
+  ), 'setting');
+  $element = array();
+  foreach ($items as $delta => $item) {
+    $element[$delta] = array(
+      '#type' => 'hidden',
+      '#value' => strip_tags($item['value']),
+      '#attached' => array(
+        'css' => array(
+          drupal_get_path('module', 'field_tooltips_data') . '/css/tooltips.css',
+        ),
+        'js' => array(
+          drupal_get_path('module', 'field_tooltips_data') . '/js/tooltips-view.js',
+          drupal_get_path('module', 'field_tooltips_data') . '/js/templates.js',
+        ),
+      ),
+    );
+  }
+  return $element;
+}

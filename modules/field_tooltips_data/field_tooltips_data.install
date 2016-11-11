@@ -1,0 +1,27 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Field Tooltips Data module.
+ */
+
+/**
+ * Implements hook_field_schema().
+ */
+function field_tooltips_data_field_schema($field) {
+  $columns = array();
+  switch ($field['type']) {
+    case 'field_tooltips_data':
+      $columns = array(
+        'value' => array(
+          'type' => 'text',
+          'size' => 'big',
+          'not null' => FALSE,
+        ),
+      );
+      break;
+  }
+  return array(
+    'columns' => $columns,
+  );
+}
