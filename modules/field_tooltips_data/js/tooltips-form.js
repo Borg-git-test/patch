@@ -42,7 +42,7 @@
 
         var selectedMatches = selectedNode.match('\(([1-9])+\)');
         var selectedNid = selectedMatches[0];
-        var selectedtitle = selectedNode.replace('\(([1-9])+\)', '');
+        var selectedtitle = selectedNode.replace(/\([0-9]\)/g, '').trim();
 
         var icon = {
           nid: selectedNid,
