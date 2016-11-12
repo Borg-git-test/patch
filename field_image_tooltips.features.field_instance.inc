@@ -66,7 +66,7 @@ function field_image_tooltips_field_default_field_instances() {
   $field_instances['paragraphs_item-image_tooltips-field_tooltip_icon'] = array(
     'bundle' => 'image_tooltips',
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Image that will be used as icon for tooltips.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
