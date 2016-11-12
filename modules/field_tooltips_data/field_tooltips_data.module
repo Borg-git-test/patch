@@ -64,6 +64,16 @@ function field_tooltips_data_field_info() {
 }
 
 /**
+ * Implements hook_field_settings_form().
+ */
+function field_tooltips_data_field_settings_form($field, $instance) {
+  if ($instance['bundle'] !== 'image_tooltips') {
+    drupal_set_message(t('Be careful, field <em>!label</em> can be used only inside "Field image tooltips" Paragraphs bundle. It won\'t work in other places.', array('!label' => $instance['label'])), 'warning');
+  }
+  return array();
+}
+
+/**
  * Implements hook_field_validate().
  */
 function field_tooltips_data_field_validate($entity_type, $entity, $field, $instance, $langcode, $items, &$errors) {
