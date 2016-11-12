@@ -121,7 +121,7 @@
       });
 
       // Highlight active tooltip.
-      $('.tooltip-configure-link', context).on('click', function(event, node) {
+      $tooltipsContainer.on('click', '.tooltip-configure-link', function(event, node) {
         var $this = $(this);
         var $conatiner = $this.closest('.paragraphs-item-type-image-tooltips');
         $conatiner.find('.tip').removeClass('active');
