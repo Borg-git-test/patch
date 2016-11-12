@@ -66,7 +66,7 @@ function field_image_tooltips_field_default_field_instances() {
   $field_instances['paragraphs_item-image_tooltips-field_tooltip_icon'] = array(
     'bundle' => 'image_tooltips',
     'deleted' => 0,
-    'description' => 'Image that will be used as icon for tooltips.',
+    'description' => 'Image that will be used as icon for tooltips. Drupal favicon will be displayed by default.',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -190,6 +190,7 @@ function field_image_tooltips_field_default_field_instances() {
   // Included for use with string extractors like potx.
   t('Base image');
   t('Tooltip icon');
+  t('Image that will be used as icon for tooltips. Drupal favicon will be displayed by default.');
   t('Tooltips content');
   t('Tooltips data');
 
