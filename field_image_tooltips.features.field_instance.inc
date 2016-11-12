@@ -114,7 +114,7 @@ function field_image_tooltips_field_default_field_instances() {
     'bundle' => 'image_tooltips',
     'default_value' => NULL,
     'deleted' => 0,
-    'description' => '',
+    'description' => 'Nodes that will be displayed in Ctools popups when user clicks on tooltip icon',
     'display' => array(
       'default' => array(
         'label' => 'hidden',
@@ -192,6 +192,7 @@ function field_image_tooltips_field_default_field_instances() {
   t('Tooltip icon');
   t('Image that will be used as icon for tooltips. Drupal favicon will be displayed by default.');
   t('Tooltips content');
+  t('Nodes that will be displayed in Ctools popups when user clicks on tooltip icon');
   t('Tooltips data');
 
   return $field_instances;
