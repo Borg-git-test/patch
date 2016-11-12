@@ -33,4 +33,14 @@
     return html;
   };
 
+  Drupal.theme.prototype.tooltip_warning = function() {
+    var html = '';
+    html += '<div class="tooltips-empty-warning">';
+    html += '<span class="closebtn">&times;</span>';
+    html += '<strong>' + Drupal.t('Warning!') + '</strong>&nbsp;';
+    html += Drupal.t('Please upload base image before adding tooltips.');
+    html += '</div>';
+    return html;
+  };
+
 })(jQuery);

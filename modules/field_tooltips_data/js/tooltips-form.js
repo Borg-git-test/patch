@@ -61,10 +61,24 @@
       // Remove saved tooltip if user ties to change field.
       $(autocompleteField).bind('focus', function(event, node) {
         var $this = $(this);
-        $this.siblings('.tooltip-config-link').remove();
 
         var $baseImage = $this.parents('.field-name-field-tooltips-content').siblings('.field-name-field-tooltip-base-image');
+
+        // Add warning if user has not uploaded base image before selecting tooltips.
+        if (!$baseImage.find('.image-preview').length || !$baseImage.find('img').attr('src')) {
+          var $container = $this.parents('.paragraphs-item-type-image-tooltips');
+          if (!$container.find('.tooltips-empty-warning').length) {
+            var warningMessage = Drupal.theme('tooltip_warning');
+            $(warningMessage).insertBefore($this.parents('.field-name-field-tooltips-content'));
+            $this.blur();
+          }
+
+          return false;
+        }
+
+        // Remove saved tooltip.
         $baseImage.find('.tip[data-delta="' + $this.attr('id') + '"]').remove();
+        $this.siblings('.tooltip-config-link').remove();
 
         var $savedPositionsInput = $this.parents('.field-name-field-tooltips-content').siblings('.field-name-field-tooltips-data input');
 
@@ -114,6 +128,11 @@
         var nid = $this.data('nid');
         $conatiner.find('.tip[data-nid="' + nid + '"]').addClass('active');
         event.preventDefault();
+      });
+
+      // Close warning message.
+      $tooltipsContainer.on('click', '.tooltips-empty-warning .closebtn', function(event, node) {
+        $(this).parent().remove();
       });
 
       // Add tooltips links that were removed during form rebuild.
