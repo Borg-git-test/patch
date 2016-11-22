@@ -1,6 +1,0 @@
-name = Field Tooltips Data
-description = Defines tooltips data field type.
-package = Fields
-core = 7.x
-dependencies[] = ctools
-dependencies[] = jquery_update
