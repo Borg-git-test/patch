@@ -1,0 +1,11 @@
+name: 'Field image tooltips'
+description: 'Provide configuration for field that displays images with tooltips'
+type: module
+core: 8.x
+dependencies:
+  - field
+  - field_tooltips_data
+  - file
+  - image
+  - node
+  - paragraphs
