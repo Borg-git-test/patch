@@ -9,19 +9,13 @@ REQUIREMENTS
 ------------
 This module requires the following modules:
 
- * Ctools
- * Entityreference
  * Features
- * Image
  * Paragraphs
- * Strongarm
 
 INSTALLATION
 ------------
 
- Install as you would normally install a contributed Drupal module. See:
- https://drupal.org/documentation/install/modules-themes/modules-7
- for further information.
+ Install as you would normally install a contributed Drupal module.
 
 CONFIGURATION
 -------------
@@ -34,8 +28,7 @@ CONFIGURATION
    e.g. "Admin-> Structure-> Content types-> Article-> Manage fields".
 
  * On the field configuration form in the "Allowed Paragraph bundles" choose
-   "Image with tooltips". "Default edit mode" setting should be set to "Open"
-   and "Add mode" should be "Buttons".
+   "Image with tooltips".
 
  * You may also change default settings for fields in "Field image tooltips"
    Paragraphs bundle. For that use the the usual "Manage fields" interface
