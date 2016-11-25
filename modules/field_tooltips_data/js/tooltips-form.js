@@ -82,7 +82,7 @@
         $baseImage.find('.tip[data-delta="' + $this.attr('id') + '"]').remove();
         $this.siblings('.tooltip-config-link').remove();
 
-        var $savedPositionsInput = $this.parents('.field--name-field-tooltips-content').siblings('.field--name-field-tooltips-data input');
+        var $savedPositionsInput = $this.parents('.field--name-field-tooltips-content').siblings('.field--name-field-tooltips-data').find('input');
 
         var savedData = $savedPositionsInput.val();
         if (savedData) {
