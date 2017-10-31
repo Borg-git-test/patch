@@ -12,7 +12,7 @@ entity_type: paragraph
 bundle: image_tooltips
 label: 'Base image'
 description: ''
-required: true
+required: false
 translatable: false
 default_value: {  }
 default_value_callback: ''
