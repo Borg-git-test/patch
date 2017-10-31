@@ -27,7 +27,7 @@
     var html = '';
     html += '<div class="tooltip-config-link">';
     html += '<a href="#tooltip-icon-' + nid + '" class="tooltip-configure-link" data-nid="' + nid + '">';
-    html += Drupal.t('Canage position for this tooltip');
+    html += Drupal.t('Change position for this tooltip');
     html += '</a>';
     html += '</div>';
     return html;
