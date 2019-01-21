@@ -22,6 +22,7 @@
           });
         }
         $this.addClass('tooltips-processed');
+        Drupal.attachBehaviors($this.get(0));
       });
     }
   }
