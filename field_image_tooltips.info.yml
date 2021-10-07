@@ -1,7 +1,8 @@
 name: Field Image Tooltips
 type: module
 description: 'Provide configuration for field that displays images with tooltips.'
-core: 8.x
+core: '8.x'
+core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:field
   - field_image_tooltips:field_tooltips_data

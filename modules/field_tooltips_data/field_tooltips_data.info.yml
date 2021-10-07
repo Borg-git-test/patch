@@ -2,6 +2,7 @@ name: Field Tooltips Data
 type: module
 description: 'Defines tooltips data field type.'
 package: Fields
-core: 8.x
+core: '8.x'
+core_version_requirement: ^8 || ^9
 dependencies:
   - drupal:field

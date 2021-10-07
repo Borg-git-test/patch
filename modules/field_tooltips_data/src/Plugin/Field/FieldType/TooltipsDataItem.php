@@ -61,7 +61,7 @@ class TooltipsDataItem extends FieldItemBase {
    * {@inheritdoc}
    */
   public function storageSettingsForm(array &$form, FormStateInterface $form_state, $has_data) {
-    drupal_set_message(t('Be careful, field <em>@label</em> can be used only inside "Field image tooltips" Paragraphs bundle. It won\'t work in other places.', array('@label' => $this->getFieldDefinition()->getLabel())), 'warning');
+    \Drupal::messenger()->addWarning(t('Be careful, field <em>@label</em> can be used only inside "Field image tooltips" Paragraphs bundle. It won\'t work in other places.', array('@label' => $this->getFieldDefinition()->getLabel())));
     return $form;
   }
 

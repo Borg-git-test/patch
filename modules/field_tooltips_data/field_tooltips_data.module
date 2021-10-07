@@ -1,14 +1,14 @@
 <?php
 
+use Drupal\Core\Form\FormStateInterface;
 /**
  * @file
  * This module enables basic Field Image Tooltips functionality.
  */
-
 /**
  * Implements hook_field_widget_WIDGET_TYPE_form_alter().
  */
-function field_tooltips_data_field_widget_form_alter(&$element, \Drupal\Core\Form\FormStateInterface $form_state, $context) {
+function field_tooltips_data_field_widget_form_alter(&$element, FormStateInterface $form_state, $context) {
   $field_definition = $context['items']->getFieldDefinition();
   if ($field_definition->getType() == 'entity_reference_revisions') {
     $settings = $field_definition->getSettings();
