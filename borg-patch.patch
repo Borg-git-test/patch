@@ -1,0 +1,138 @@
+diff --git a/borg.patch b/borg.patch
+new file mode 100644
+index 0000000..1978c31
+--- /dev/null
++++ b/borg.patch
+@@ -0,0 +1,115 @@
++diff --git a/modules/field_tooltips_data/css/tooltips.css b/modules/field_tooltips_data/css/tooltips.css
++index 74f4f0f..021c893 100644
++--- a/modules/field_tooltips_data/css/tooltips.css
+++++ b/modules/field_tooltips_data/css/tooltips.css
++@@ -26,3 +26,7 @@
++ .tooltips-empty-warning .closebtn:hover {
++   color: black;
++ }
+++
+++.paragraph--type--image-tooltips, .field--name-field-tooltip-base-image .image-preview {
+++  position: relative;
+++}
++\ No newline at end of file
++diff --git a/modules/field_tooltips_data/js/templates.js b/modules/field_tooltips_data/js/templates.js
++index 8766d0f..5fa29dc 100644
++--- a/modules/field_tooltips_data/js/templates.js
+++++ b/modules/field_tooltips_data/js/templates.js
++@@ -7,7 +7,7 @@
++ 
++   Drupal.theme.imageTooltipIconForm = function(icon) {
++     var html = '';
++-    html += '<div class="tip ui-draggable" id="tooltip-icon-' + icon.nid + '" data-nid="' + icon.nid + '" data-title="' + icon.title + '" data-src="' + icon.src + '" data-delta="' + icon.delta + '" style="position: relative; left: ' + icon.left + 'px; top: ' + icon.top + 'px;">';
+++    html += '<div class="tip ui-draggable" id="tooltip-icon-' + icon.nid + '" data-nid="' + icon.nid + '" data-title="' + icon.title + '" data-src="' + icon.src + '" data-delta="' + icon.delta + '" style="position: absolute; left: ' + icon.left + '%; top: ' + icon.top + '%;">';
++     html += '<img class="tooltip-icon" src="' + icon.src + '" title="' + icon.title + '">';
++     html += '</div>';
++     return html;
++@@ -15,7 +15,7 @@
++ 
++   Drupal.theme.imageTooltipIconView = function(icon) {
++     var html = '';
++-    html += '<div class="tip" data-nid="' + icon.nid + '" style="position: relative; left: ' + icon.left + 'px; top: ' + icon.top + 'px;">';
+++    html += '<div class="tip" data-nid="' + icon.nid + '" style="position: absolute; left: ' + icon.left + '%; top: ' + icon.top + '%;">';
++     html += '<a href="/tooltip/' + icon.nid + '/nojs" class="use-ajax" data-dialog-type="modal" title="' + icon.title + '">';
++     html += '<img class="tooltip-icon" id="tooltip-icon-' + icon.nid + '" src="' + icon.src + '">';
++     html += '</a>';
++diff --git a/modules/field_tooltips_data/js/tooltips-form.js b/modules/field_tooltips_data/js/tooltips-form.js
++index 9a2e141..28c5134 100644
++--- a/modules/field_tooltips_data/js/tooltips-form.js
+++++ b/modules/field_tooltips_data/js/tooltips-form.js
++@@ -15,7 +15,7 @@
++         var tooltisValue = $this.find('input').val();
++         if (tooltisValue) {
++           var tooltipsData = JSON.parse(tooltisValue);
++-          var $baseImage = $this.siblings('.field--name-field-tooltip-base-image');
+++          var $baseImage = $this.siblings('.field--name-field-tooltip-base-image').find('.image-preview');
++           var tooltip, configLink;
++           $.each(tooltipsData, function(index, icon) {
++             tooltip = Drupal.theme('imageTooltipIconForm', icon);
++@@ -40,20 +40,22 @@
++             iconImageSrc = drupalSettings.imageTooltip.icon;
++           }
++           var selectedNode = ui.item.value;
++-
++-          var selectedMatches = selectedNode.match('\(([1-9])+\)');
++-          var selectedNid = selectedMatches[0];
+++          var regExp = /\(([^)]+)\)/;
+++          let selectedMatches = regExp.exec(selectedNode);
+++          var selectedNid = selectedMatches[1];
++           var selectedtitle = ui.item.label;
++ 
++           var icon = {
++             nid: selectedNid,
++             title: selectedtitle,
++             src: iconImageSrc,
++-            delta: $this.data('drupal-selector')
+++            delta: $this.data('drupal-selector'),
+++            top: '0',
+++            left: '0'
++           };
++ 
++           var tooltip = Drupal.theme('imageTooltipIconForm', icon);
++-          $(tooltip).appendTo($baseImage).draggable();
+++          $(tooltip).appendTo($baseImage.find('.image-preview')).draggable();
++ 
++           var editTooltipPosition = Drupal.theme('tooltipConfigLink', selectedNid);
++           $(editTooltipPosition).insertAfter($this);
++@@ -102,8 +104,8 @@
++           title: $(ev.target).data('title'),
++           src: $(ev.target).data('src'),
++           delta: $(ev.target).data('delta'),
++-          left: ui.position.left,
++-          top: ui.position.top
+++          left: (ui.position.left * 100 / $this.find(".image-preview img").width()),
+++          top: (ui.position.top * 100 / $this.find(".image-preview img").height()),
++         };
++         var $savedPositionsField = $this.siblings('.field--name-field-tooltips-data');
++ 
++diff --git a/modules/field_tooltips_data/js/tooltips-view.js b/modules/field_tooltips_data/js/tooltips-view.js
++index df1260d..5cfc6d9 100644
++--- a/modules/field_tooltips_data/js/tooltips-view.js
+++++ b/modules/field_tooltips_data/js/tooltips-view.js
++@@ -15,8 +15,8 @@
++           var $baseImage = $baseImageContainer.find('img');
++           var tooltip;
++           $.each(tooltipsData, function(index, icon) {
++-            icon.top = Math.round((icon.top * $baseImage.height()) / $baseImage.attr('height'));
++-            icon.left = Math.round((icon.left * $baseImage.width()) / $baseImage.attr('width'));
+++            // icon.top = Math.round((icon.top * $baseImage.height()) / $baseImage.attr('height'));
+++            // icon.left = Math.round((icon.left * $baseImage.width()) / $baseImage.attr('width'));
++             tooltip = Drupal.theme('imageTooltipIconView', icon);
++             $(tooltip).appendTo($baseImageContainer);
++           });
++diff --git a/modules/field_tooltips_data/src/Controller/TooltipsDataController.php b/modules/field_tooltips_data/src/Controller/TooltipsDataController.php
++index 3a6577c..24db327 100644
++--- a/modules/field_tooltips_data/src/Controller/TooltipsDataController.php
+++++ b/modules/field_tooltips_data/src/Controller/TooltipsDataController.php
++@@ -23,7 +23,7 @@ class TooltipsDataController extends ControllerBase {
++     $content = $view_builder->view($node, 'full');
++     if ($js == 'ajax') {
++       $response = new AjaxResponse();
++-      $response->addCommand(new OpenModalDialogCommand($node->getTitle(), $content, []));
+++      $response->addCommand(new OpenModalDialogCommand($node->getTitle(), $content, ['dialogClass' => 'tooltip-modal']));
++       return $response;
++     }
++     else {
+diff --git a/modules/field_tooltips_data/js/tooltips-form.js b/modules/field_tooltips_data/js/tooltips-form.js
+index 342a9ff..28c5134 100644
+--- a/modules/field_tooltips_data/js/tooltips-form.js
++++ b/modules/field_tooltips_data/js/tooltips-form.js
+@@ -40,9 +40,9 @@
+             iconImageSrc = drupalSettings.imageTooltip.icon;
+           }
+           var selectedNode = ui.item.value;
+-
+-          var selectedMatches = selectedNode.match('\(([1-9])+\)');
+-          var selectedNid = selectedMatches[0];
++          var regExp = /\(([^)]+)\)/;
++          let selectedMatches = regExp.exec(selectedNode);
++          var selectedNid = selectedMatches[1];
+           var selectedtitle = ui.item.label;
+ 
+           var icon = {
