@@ -15,7 +15,7 @@
         var tooltisValue = $this.find('input').val();
         if (tooltisValue) {
           var tooltipsData = JSON.parse(tooltisValue);
-          var $baseImage = $this.siblings('.field--name-field-tooltip-base-image');
+          var $baseImage = $this.siblings('.field--name-field-tooltip-base-image').find('.image-preview');
           var tooltip, configLink;
           $.each(tooltipsData, function(index, icon) {
             tooltip = Drupal.theme('imageTooltipIconForm', icon);
@@ -40,20 +40,22 @@
             iconImageSrc = drupalSettings.imageTooltip.icon;
           }
           var selectedNode = ui.item.value;
-
-          var selectedMatches = selectedNode.match('\(([1-9])+\)');
-          var selectedNid = selectedMatches[0];
+          var regExp = /\(([^)]+)\)/;
+          let selectedMatches = regExp.exec(selectedNode);
+          var selectedNid = selectedMatches[1];
           var selectedtitle = ui.item.label;
 
           var icon = {
             nid: selectedNid,
             title: selectedtitle,
             src: iconImageSrc,
-            delta: $this.data('drupal-selector')
+            delta: $this.data('drupal-selector'),
+            top: '0',
+            left: '0'
           };
 
           var tooltip = Drupal.theme('imageTooltipIconForm', icon);
-          $(tooltip).appendTo($baseImage).draggable();
+          $(tooltip).appendTo($baseImage.find('.image-preview')).draggable();
 
           var editTooltipPosition = Drupal.theme('tooltipConfigLink', selectedNid);
           $(editTooltipPosition).insertAfter($this);
@@ -102,8 +104,8 @@
           title: $(ev.target).data('title'),
           src: $(ev.target).data('src'),
           delta: $(ev.target).data('delta'),
-          left: ui.position.left,
-          top: ui.position.top
+          left: (ui.position.left * 100 / $this.find(".image-preview img").width()),
+          top: (ui.position.top * 100 / $this.find(".image-preview img").height()),
         };
         var $savedPositionsField = $this.siblings('.field--name-field-tooltips-data');
 

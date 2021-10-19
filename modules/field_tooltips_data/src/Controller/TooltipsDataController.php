@@ -23,7 +23,7 @@ class TooltipsDataController extends ControllerBase {
     $content = $view_builder->view($node, 'full');
     if ($js == 'ajax') {
       $response = new AjaxResponse();
-      $response->addCommand(new OpenModalDialogCommand($node->getTitle(), $content, []));
+      $response->addCommand(new OpenModalDialogCommand($node->getTitle(), $content, ['dialogClass' => 'tooltip-modal']));
       return $response;
     }
     else {

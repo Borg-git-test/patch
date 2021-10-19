@@ -15,8 +15,8 @@
           var $baseImage = $baseImageContainer.find('img');
           var tooltip;
           $.each(tooltipsData, function(index, icon) {
-            icon.top = Math.round((icon.top * $baseImage.height()) / $baseImage.attr('height'));
-            icon.left = Math.round((icon.left * $baseImage.width()) / $baseImage.attr('width'));
+            // icon.top = Math.round((icon.top * $baseImage.height()) / $baseImage.attr('height'));
+            // icon.left = Math.round((icon.left * $baseImage.width()) / $baseImage.attr('width'));
             tooltip = Drupal.theme('imageTooltipIconView', icon);
             $(tooltip).appendTo($baseImageContainer);
           });

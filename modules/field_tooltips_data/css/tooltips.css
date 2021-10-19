@@ -26,3 +26,7 @@
 .tooltips-empty-warning .closebtn:hover {
   color: black;
 }
+
+.paragraph--type--image-tooltips, .field--name-field-tooltip-base-image .image-preview {
+  position: relative;
+}
