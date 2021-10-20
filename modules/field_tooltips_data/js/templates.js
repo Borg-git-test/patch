@@ -8,7 +8,7 @@
   Drupal.theme.imageTooltipIconForm = function(icon) {
     var html = '';
     html += '<div class="tip ui-draggable" id="tooltip-icon-' + icon.nid + '" data-nid="' + icon.nid + '" data-title="' + icon.title + '" data-src="' + icon.src + '" data-delta="' + icon.delta + '" style="position: absolute; left: ' + icon.left + '%; top: ' + icon.top + '%;">';
-    html += '<img class="tooltip-icon" src="' + icon.src + '" title="' + icon.title + '">';
+    html += '<img style="transform: translate(-50%, -50%)" class="tooltip-icon" src="' + icon.src + '" title="' + icon.title + '">';
     html += '</div>';
     return html;
   };
@@ -17,7 +17,7 @@
     var html = '';
     html += '<div class="tip" data-nid="' + icon.nid + '" style="position: absolute; left: ' + icon.left + '%; top: ' + icon.top + '%;">';
     html += '<a href="/tooltip/' + icon.nid + '/nojs" class="use-ajax" data-dialog-type="modal" title="' + icon.title + '">';
-    html += '<img class="tooltip-icon" id="tooltip-icon-' + icon.nid + '" src="' + icon.src + '">';
+    html += '<img style="transform: translate(-50%, -50%)" class="tooltip-icon" id="tooltip-icon-' + icon.nid + '" src="' + icon.src + '">';
     html += '</a>';
     html += '</div>';
     return html;
